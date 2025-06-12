@@ -1,0 +1,1 @@
+/home/horo/projects/Z80/kosarev/z80_Ho-Ro/examples/supplements/zexall.com

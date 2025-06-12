@@ -5,3 +5,13 @@ z80/_z80.cpython-*
 z80/__pycache__
 tests/__pycache__
 /zx.egg-info
+CMakeFiles
+CMakeCache.txt
+*.cmake
+Makefile
+.*~
+*~
+*.bak
+*.new
+*.old
+*.orig

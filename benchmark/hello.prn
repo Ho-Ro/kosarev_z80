@@ -1,0 +1,42 @@
+ZSM 4.1	Source file: HELLO    	                     	Page    1
+
+                                ; Testprogram for benchmark tick count
+                                
+  0000  =                       EXIT    EQU     0000h           ; EXIT point
+  0005  =                       BDOS    EQU     0005h           ; BDOS entry point
+                                
+  0002  =                       CONOUT  EQU     2               ; BDOS call console out
+  0009  =                       PRTSTR  EQU     9               ; BDOS call print string
+                                
+  000D  =                       CR      EQU     0dh
+  000A  =                       LF      EQU     0ah
+                                
+                                
+                                        ASEG
+  0100  =                               ORG     100h
+                                
+  0100  11 010B                         LD      DE, MESSAGE     ; 10 ticks
+  0103  0E 09                           LD      C, PRTSTR       ;  7 ticks
+  0105  CD 0005                         CALL    BDOS            ; 17 ticks
+                                                                ;          (do not count BDOS execution)
+                                                                ; 10 ticks (RET from BDOS)
+  0108  C3 0000                         JP      EXIT            ; 10 ticks
+                                                                ; --------
+                                                                ; 54 ticks
+                                                                ; ========
+                                
+  010B                          MESSAGE:
+  010B  68 65 6C 6C 6F 2C               DEFB    "hello, world"
+  0111  20 77 6F 72 6C 64       
+  0117  0D 0A 24                        DEFB    CR,LF,"$"
+                                
+                                
+
+Errors: 0
+ZSM 4.1	Source file: HELLO    	                     	Page    2
+
+Symbols:
+BDOS ............. 0005   CONOUT ........... 0002   CR ............... 000D 
+EXIT ............. 0000   LF ............... 000A   MESSAGE .......... 010B 
+PRTSTR ........... 0009   
+

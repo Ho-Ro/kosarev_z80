@@ -1,0 +1,29 @@
+; Testprogram for benchmark tick count
+
+EXIT    EQU     0000h           ; EXIT point
+BDOS    EQU     0005h           ; BDOS entry point
+
+CONOUT  EQU     2               ; BDOS call console out
+PRTSTR  EQU     9               ; BDOS call print string
+
+CR      EQU     0dh
+LF      EQU     0ah
+
+
+        ASEG
+        ORG     100h
+
+        LD      DE, MESSAGE     ; 10 ticks
+        LD      C, PRTSTR       ;  7 ticks
+        CALL    BDOS            ; 17 ticks
+                                ;          (do not count BDOS execution)
+                                ; 10 ticks (RET from BDOS)
+        JP      EXIT            ; 10 ticks
+                                ; --------
+                                ; 54 ticks
+                                ; ========
+
+MESSAGE:
+        DEFB    "hello, world"
+        DEFB    CR,LF,"$"
+
