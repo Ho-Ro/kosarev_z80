@@ -62,6 +62,14 @@ public:
         write_char(base::get_e());
     }
 
+    void handle_c_dirconio() {
+        fast_u8 e = base::get_e();
+        if ( e == 0xff ) // input?
+            base::set_a( 0 ); // no char available
+        else
+            write_char( e );
+    }
+
     void handle_c_writestr() {
         fast_u16 addr = base::get_de();
         for(;;) {
@@ -74,16 +82,47 @@ public:
         }
     }
 
+    void handle_c_setgetusr() {
+        static fast_u8 user = 0;
+        fast_u8 e = base::get_e();
+        if ( e == 0xff ) // get usr?
+            base::set_a( user );
+        else // set user
+            user = e;
+    }
+
     void handle_bdos_call( fast_u8 c ) {
         switch( c ) {
         case c_write:
             handle_c_write();
             break;
+        case c_dirconio:
+            handle_c_dirconio();
+            break;
         case c_writestr:
             handle_c_writestr();
             break;
+        case c_getver:
+            base::set_hl( 0x0022 ); // 0: CP/M, 22: 2.2
+            break;
+        case c_seldisk:
+            base::set_a( 0 ); // ok
+            break;
+        case c_srchfrst:
+        case c_srchnxt:
+            base::set_a( 0xff ); // not found
+            break;
+        case c_getcurdsk:
+            base::set_a( 0 ); // A:
+            break;
+        case c_getrodsk:
+            base::set_hl( 0 ); // none
+            break;
+        case c_setgetusr:
+            handle_c_setgetusr();
+            break;
         default:
-            std::printf( "bdos: %d\n", c );
+            std::printf( "bdos: %3d\tDE: 0x%04x\n", c, base::get_de() );
         }
     }
 
@@ -109,8 +148,19 @@ protected:
     uint64_t ticks = 0;
 
 private:
-    static constexpr fast_u8 c_write = 0x02;
-    static constexpr fast_u8 c_writestr = 0x09;
+    static constexpr fast_u8 c_write = 2;
+    static constexpr fast_u8 c_dirconio = 6;
+    static constexpr fast_u8 c_writestr = 9;
+    static constexpr fast_u8 c_getver = 12;
+    static constexpr fast_u8 c_seldisk = 14;
+    static constexpr fast_u8 c_srchfrst = 17;
+    static constexpr fast_u8 c_srchnxt = 18;
+    static constexpr fast_u8 c_getcurdsk = 25;
+    static constexpr fast_u8 c_setdma = 26;
+    static constexpr fast_u8 c_getallocv = 27;
+    static constexpr fast_u8 c_getrodsk = 29;
+    static constexpr fast_u8 c_getdpb = 31;
+    static constexpr fast_u8 c_setgetusr = 32;
 };
 
 
